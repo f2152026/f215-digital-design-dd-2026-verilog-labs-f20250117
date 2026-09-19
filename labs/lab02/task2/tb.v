@@ -3,25 +3,41 @@
 
 module tb;
 
-  // TODO: declare the inputs and outputs
+    // Declare inputs and output
+    reg [1:0] t_sel;
+    wire [7:0] t_dout;
 
-  // TODO: instantiate DUT here
+    // Instantiate DUT
+    lut UUT (
+        .sel(t_sel),
+        .dout(t_dout)
+    );
 
-  // Waveform dump configuration (DO NOT CHANGE)
-  string vcd_file;
-  initial begin
-    if ($value$plusargs("vcd=%s", vcd_file)) begin
-      $dumpfile(vcd_file);
-      $dumpvars(0, DUT);
+    // Waveform dump configuration (DO NOT CHANGE)
+
+    string vcd_file;
+
+    initial begin
+        if ($value$plusargs("vcd=%s", vcd_file)) begin
+            $dumpfile(vcd_file);
+            $dumpvars(0, UUT);
+        end
     end
-  end
 
-  initial begin
-    // TODO: apply different input combinations
+    // Apply all input combinations
+    initial begin
+        t_sel = 2'b00;
+        #5 t_sel = 2'b01;
+        #5 t_sel = 2'b10;
+        #5 t_sel = 2'b11;
 
-  end
+        #5 $finish;
+    end
 
-  initial
-    $monitor($time, " I0=%b I1=%b S=%b | Y=%b", t_i0, t_i1, t_s, t_y); // change as required
+    // Monitor output
+    initial begin
+        $monitor($time, " sel=%b | dout=%b (%0d)",
+                 t_sel, t_dout, t_dout);
+    end
 
 endmodule
